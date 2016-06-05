@@ -9,8 +9,10 @@ Required Libraries:
 
 ## Example
 
+```Java
 LocalBitcoinsRequest request = new LocalBitcoinsRequest(LocalBitcoinsRequest.WALLET, "");
 String data = request.pullData();
 //Parse String to JSON (I recommend Gson)
+```
 
 To generate hmac_auth_key (key) and hmac_auth_secret (secret), go to: https://localbitcoins.com/accounts/api/

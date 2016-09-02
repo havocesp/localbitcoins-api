@@ -10,7 +10,15 @@ Required Libraries:
 ## Example
 
 ```Java
-com.fuzzy.LocalBitcoinsRequest request = new com.fuzzy.LocalBitcoinsRequest(com.fuzzy.LocalBitcoinsRequest.WALLET, "");
+com.fuzzy.LocalBitcoinsRequest request = new com.fuzzy.LocalBitcoinsRequest(com.fuzzy.LocalBitcoinsRequest.WALLET, null, LocalBitcoinsRequest.HttpType.GET);
+String data = request.pullData();
+//Parse String to JSON (I recommend Gson)
+```
+To use parameters you have to create a ParameterCollection object and add BasicNameValuePair's to it.
+```Java
+ParameterCollection parameterCollection = new ParameterCollection(new ArrayList<>());
+parameterCollection.add(new BasicNameValuePair("test", "1234"));
+LocalBitcoinsRequest request = new LocalBitcoinsRequest("/api/sample", parameterCollection, LocalBitcoinsRequest.HttpType.POST);
 String data = request.pullData();
 //Parse String to JSON (I recommend Gson)
 ```

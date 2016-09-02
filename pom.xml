@@ -8,14 +8,6 @@
     <artifactId>LocalbitcoinsAPI</artifactId>
     <version>0.0.1</version>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.7</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

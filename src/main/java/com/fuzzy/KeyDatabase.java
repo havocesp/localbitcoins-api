@@ -9,8 +9,7 @@ public class KeyDatabase {
     private String authKey;
 
     private KeyDatabase() {
-        this.secretKey = "";
-        this.authKey = "";
+        //TODO LIST KEYS FROM DATABASE OR HARDCODE THEM
     }
 
     public String getSecretKey() {

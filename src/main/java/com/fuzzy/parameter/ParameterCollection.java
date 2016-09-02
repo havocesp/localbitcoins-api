@@ -1,5 +1,7 @@
 package com.fuzzy.parameter;
 
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.List;
 
 /**
@@ -7,36 +9,27 @@ import java.util.List;
  */
 public class ParameterCollection {
 
-    private List<RequestParameter> parameters;
+    private List<BasicNameValuePair> parameters;
 
-    public ParameterCollection(List<RequestParameter> parameters) {
+    public ParameterCollection(List<BasicNameValuePair> parameters) {
         this.parameters = parameters;
     }
 
-    public void add(RequestParameter requestParameter) {
+    public void add(BasicNameValuePair requestParameter) {
         this.parameters.add(requestParameter);
     }
 
-    public void addAll(RequestParameter... requestParameters) {
-        for (RequestParameter p : requestParameters) {
+    public void addAll(BasicNameValuePair... requestParameters) {
+        for (BasicNameValuePair p : requestParameters) {
             add(p);
         }
     }
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder("{");
-        for (RequestParameter p : parameters) {
-            builder.append("\"").append(p.getKey()).append("\"").append(":");
-            if (p.getValue() instanceof String) {
-                builder.append("\"").append(p.getValue()).append("\"");
-            } else {
-                builder.append(p.getValue());
-            }
-            builder.append(",");
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        builder.append("}");
-        return builder.toString();
+
+    public List<BasicNameValuePair> getParameters() {
+        return parameters;
     }
 
+    public void setParameters(List<BasicNameValuePair> parameters) {
+        this.parameters = parameters;
+    }
 }

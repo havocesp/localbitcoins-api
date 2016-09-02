@@ -1,13 +1,17 @@
 package com.fuzzy;
 
 import com.fuzzy.parameter.ParameterCollection;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,26 +22,48 @@ import java.io.InputStreamReader;
 public class LocalBitcoinsRequest {
 
     public static final String BASE_URL = "https://localbitcoins.com";
-    public static final Gson GSON = new GsonBuilder().create();
 
     private final String path;
     private final String nonce;
-    private final String signature;
+    private String signature;
+    private final HttpType type;
 
-    public LocalBitcoinsRequest(String path, ParameterCollection parameters) {
+    private ParameterCollection parameters;
+
+    public LocalBitcoinsRequest(String path, ParameterCollection parameters, HttpType type) {
         this.nonce = String.valueOf(System.currentTimeMillis());
         this.path = path.startsWith("/api") ? path : ("/api" + path);
-        this.signature = new HMACSignature(this.path, parameters.toString(), nonce).toString();
+        this.parameters = parameters;
+        this.type = type;
     }
 
-    public HttpResponse getContent() {
+    public enum HttpType {
+        GET, POST, DELETE, PUT;
+    }
+
+    private HttpResponse getContent() {
         try {
             HttpClient client = HttpClientBuilder.create().build();
-            HttpGet get = new HttpGet(constructUrl());
-            get.addHeader("Apiauth-Key", KeyDatabase.getInstance().getAuthKey());
-            get.addHeader("Apiauth-Nonce", nonce);
-            get.addHeader("Apiauth-Signature", signature);
-            return client.execute(get);
+            HttpRequestBase base;
+            String parametersString = "";
+            switch (type) {
+                case GET:
+                default:
+                    base = new HttpGet(constructUrl());
+                    break;
+                case POST:
+                    base = new HttpPost(constructUrl());
+                    ((HttpPost) base).setEntity(new UrlEncodedFormEntity(parameters.getParameters(), "UTF-8"));
+                    BufferedReader inputStream = new BufferedReader(new InputStreamReader(((HttpPost) base).getEntity().getContent()));
+                    parametersString = inputStream.readLine();
+                    break;
+            }
+            base.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            base.addHeader("Apiauth-Key", KeyDatabase.getInstance().getAuthKey());
+            base.addHeader("Apiauth-Nonce", nonce);
+            this.signature = new HMACSignature(this.path, parametersString, nonce).toString();
+            base.addHeader("Apiauth-Signature", signature);
+            return client.execute(base);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,7 +87,7 @@ public class LocalBitcoinsRequest {
         return builder.toString();
     }
 
-    public String constructUrl() {
+    private String constructUrl() {
         return BASE_URL + path;
     }
 

@@ -10,7 +10,7 @@ Required Libraries:
 ## Example
 
 ```Java
-LocalBitcoinsRequest request = new LocalBitcoinsRequest(LocalBitcoinsRequest.WALLET, "");
+com.fuzzy.LocalBitcoinsRequest request = new com.fuzzy.LocalBitcoinsRequest(com.fuzzy.LocalBitcoinsRequest.WALLET, "");
 String data = request.pullData();
 //Parse String to JSON (I recommend Gson)
 ```

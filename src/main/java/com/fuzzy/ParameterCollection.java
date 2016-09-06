@@ -1,4 +1,4 @@
-package com.fuzzy.parameter;
+package com.fuzzy;
 
 import org.apache.http.message.BasicNameValuePair;
 

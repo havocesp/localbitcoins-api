@@ -16,10 +16,10 @@ public class HMACSignature {
     private static final String METHOD = "HmacSHA256";
     private static final String CHARSET = "UTF-8";
 
-    private String message;
+    private final String message;
 
-    public HMACSignature(String path, String parameters, String nonce) {
-        this.message = nonce + KeyDatabase.getInstance().getAuthKey() + path + parameters;
+    HMACSignature(String path, String parameters, String nonce) {
+        this.message = nonce + APIKeys.AUTH_KEY + path + parameters;
     }
 
     /**
@@ -31,7 +31,7 @@ public class HMACSignature {
     public String toString() {
         try {
             Mac sha256_HMAC = Mac.getInstance(METHOD);
-            SecretKeySpec secret_key = new SecretKeySpec(KeyDatabase.getInstance().getSecretKey().getBytes(CHARSET), METHOD);
+            SecretKeySpec secret_key = new SecretKeySpec(APIKeys.SECRET_KEY.getBytes(CHARSET), METHOD);
             sha256_HMAC.init(secret_key);
             return Hex.encodeHexString(sha256_HMAC.doFinal(message.getBytes(CHARSET))).toUpperCase();
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {

@@ -4,9 +4,6 @@ LocalBitcoins documentation: https://localbitcoins.com/api-docs/
 
 This is a Java API for localbitcoins. 
 
-Required Libraries:
-- Apache HttpComponents: https://hc.apache.org/downloads.cgi
-
 ## Example
 
 ```Java
